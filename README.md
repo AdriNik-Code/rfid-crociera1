@@ -1,10 +1,10 @@
-# 📡 Progetto RFID Crociera
+#  Progetto RFID Crociera
 Sistema di tracciamento passeggeri – Laboratorio TIPSIT
 
 Un sistema RFID che simula il funzionamento delle navi da crociera: controllo accessi, tracciamento passeggeri, pagamenti contactless e dashboard in tempo reale.
 
 
-## 🚀 Funzionalità
+##  Funzionalità
 - Lettura tag RFID (Arduino + RC522)
 - Registrazione eventi in MySQL
 - Dashboard Flask in tempo reale
@@ -13,7 +13,7 @@ Un sistema RFID che simula il funzionamento delle navi da crociera: controllo ac
 - Pagamenti simulati con saldo cabina
 
 
-## 🧱 Architettura
+##  Architettura
 
 ### Flusso dati
 1. RC522 legge il tag  
@@ -31,7 +31,7 @@ Un sistema RFID che simula il funzionamento delle navi da crociera: controllo ac
 | Versioning | GitHub |
 
 
-## 🗄️ Database
+##  Database
 
 ### Tabelle principali
 | Tabella | Contenuto |
@@ -41,11 +41,11 @@ Un sistema RFID che simula il funzionamento delle navi da crociera: controllo ac
 | posizioni | ultima zona rilevata |
 | transazioni | pagamenti simulati |
 
-## 🔌 Collegamenti RC522 → Arduino
+##  Collegamenti RC522 → Arduino
 
 | Pin RC522 | Pin Arduino Uno | Funzione |
 |-----------|------------------|----------|
-| **VCC**   | 3.3V             | Alimentazione (⚠️ solo 3.3V) |
+| **VCC**   | 3.3V             | Alimentazione ( solo 3.3V) |
 | **GND**   | GND              | Massa |
 | **SCK**   | 13               | Clock SPI |
 | **MOSI**  | 11               | Dati verso RC522 |
