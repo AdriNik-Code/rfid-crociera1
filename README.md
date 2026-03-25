@@ -55,7 +55,7 @@ Questo permette di sapere:
 Utilizzati per creare l’applicazione web che gestisce tutti i sistemi.  
 Flask permette di definire pagine, funzioni e servizi in modo semplice e veloce.
 
-### **SQLite + SQLAlchemy**
+### **MySQL**
 SQLite è un database leggero, perfetto per un progetto scolastico.  
 SQLAlchemy permette di gestire i dati in modo ordinato e sicuro.
 
