@@ -95,7 +95,7 @@ I motivi della scelta:
 - costo molto basso  
 
 Ogni cabina avrà un RC522 che legge la card del passeggero e invia l’ID al backend, che decide se l’accesso è consentito o negato.
-![Descrizione dell'immagine](RC522)
+
 
 
 ---
