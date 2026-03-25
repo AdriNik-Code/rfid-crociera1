@@ -56,8 +56,8 @@ Utilizzati per creare l’applicazione web che gestisce tutti i sistemi.
 Flask permette di definire pagine, funzioni e servizi in modo semplice e veloce.
 
 ### **MySQL**
-SQLite è un database leggero, perfetto per un progetto scolastico.  
-SQLAlchemy permette di gestire i dati in modo ordinato e sicuro.
+MySQL è un sistema di gestione di database relazionali (RDBMS), uno dei più utilizzati al mondo.  
+Permette di salvare, organizzare e gestire dati in tabelle collegate tra loro tramite relazioni.
 
 ### **HTML/CSS + Jinja2**
 Usati per costruire la **dashboard web**, che mostra:
