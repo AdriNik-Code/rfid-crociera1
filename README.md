@@ -112,6 +112,6 @@ In questo modo:
 - ogni pagamento viene registrato nello storico transazioni  
 
 Questa scelta rende il sistema realistico, semplice da dimostrare e perfetto per un progetto scolastico a budget limitato.
-[Prezzo RC522]([https://www.sito.com](http://amazon.it/AZDelivery-Lettore-RFID-Portachiavi-Raspberry-Gratuito/dp/B074S8MRQ7/ref=sr_1_2_mod_primary_new?crid=38R7MELFEXOLT&dib=eyJ2IjoiMSJ9.8DfOUnAlFnyxRXcD_-Bsh9BrbBFb6Ttw6rzbkqDcuQ6iU5Lvl5-OMGsnPI7lFNBopIK_QkeAjG90UciLI4cJz9ThoaYwAGZ2QShSdUMa3M9YxH8frb1otcipYmplAVUnRbUyNT6fdrfcFFZu-Z0p46jQrTk2fVbhNedKZdloVFBmP0YQEY6OE9NGjtreSJmBhtkwXdz3slt1jrKPPcZja1_W3VyCbEEjBG1WlhTSAwZlHNuV_asKfKzej4k3oN4bDU9MqIaMQqmN37qesDeierUk_WO6Iwiu3Eea7oxrGWI.eLEXXj_Fiam0ueyS4w8x-9C2Ckpy8JRHAMp3m7Yoqh4&dib_tag=se&keywords=rc522%2Brfid&qid=1774425401&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=%2Caps%2C246&sr=8-2&th=1))
+[Prezzo RC522]([[https://www.sito.com](http://amazon.it/AZDelivery-Lettore-RFID-Portachiavi-Raspberry-Gratuito/dp/B074S8MRQ7/ref=sr_1_2_mod_primary_new?crid=38R7MELFEXOLT&dib=eyJ2IjoiMSJ9.8DfOUnAlFnyxRXcD_-Bsh9BrbBFb6Ttw6rzbkqDcuQ6iU5Lvl5-OMGsnPI7lFNBopIK_QkeAjG90UciLI4cJz9ThoaYwAGZ2QShSdUMa3M9YxH8frb1otcipYmplAVUnRbUyNT6fdrfcFFZu-Z0p46jQrTk2fVbhNedKZdloVFBmP0YQEY6OE9NGjtreSJmBhtkwXdz3slt1jrKPPcZja1_W3VyCbEEjBG1WlhTSAwZlHNuV_asKfKzej4k3oN4bDU9MqIaMQqmN37qesDeierUk_WO6Iwiu3Eea7oxrGWI.eLEXXj_Fiam0ueyS4w8x-9C2Ckpy8JRHAMp3m7Yoqh4&dib_tag=se&keywords=rc522%2Brfid&qid=1774425401&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sprefix=%2Caps%2C246&sr=8-2&th=1)](https://amzn.eu/d/09SLb3lH))
 
 ---
