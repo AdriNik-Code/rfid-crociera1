@@ -115,7 +115,7 @@ Questa scelta rende il sistema realistico, semplice da dimostrare e perfetto per
 
 ---
 
-## 🔐 Sicurezza dei tag RFID e scelta del reader
+## Sicurezza dei tag RFID e scelta del reader
 
 Il progetto utilizza il modulo **MFRC522**, un reader molto diffuso nei laboratori didattici grazie al costo ridotto e alla semplicità di integrazione con Arduino.
 
@@ -127,6 +127,6 @@ Il progetto utilizza il modulo **MFRC522**, un reader molto diffuso nei laborato
 
 ### Conclusione
 Il MFRC522 è perfetto per imparare e prototipare, ma non per applicazioni reali che richiedono sicurezza avanzata.  
-Nel nostro progetto scolastico è usato in modo sicuro perché **non memorizziamo alcun dato personale sul tag**, ma solo l’UID.
+Nel nostro progetto scolastico è usato in modo sicuro perché **non memorizziamo alcun dato personale sul tag**, ma solo l’ID.
 
 
