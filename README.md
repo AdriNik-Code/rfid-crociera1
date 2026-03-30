@@ -125,8 +125,5 @@ Il progetto utilizza il modulo **MFRC522**, un reader molto diffuso nei laborato
 - È economico e facile da reperire
 - Perfetto per prototipi e progetti scolastici
 
-### Conclusione
-Il MFRC522 è perfetto per imparare e prototipare, ma non per applicazioni reali che richiedono sicurezza avanzata.  
-Nel nostro progetto scolastico è usato in modo sicuro perché **non memorizziamo alcun dato personale sul tag**, ma solo l’ID.
 
 
