@@ -1,129 +1,67 @@
-# Sistema Digitale Integrato per Nave da Crociera
+# 🚢 Sistema Digitale Integrato per Nave da Crociera
 
-Il progetto simula i principali sistemi digitali presenti su una nave da crociera moderna.  
-Ogni passeggero riceve una **card con ID univoco**, che permette di interagire con tre funzioni fondamentali:  
-- accesso alla cabina  
-- pagamenti a bordo  
-- sicurezza e tracciamento  
+Una card. Tre sistemi. Tutta la nave in tasca.
 
-L’obiettivo è mostrare come un’unica card possa diventare la chiave di tutto ciò che il passeggero fa durante la crociera.
+Questo progetto simula il cuore digitale di una nave da crociera moderna: ogni passeggero riceve una **card con ID univoco** che gli permette di aprire la propria cabina, pagare a bordo e risultare sempre localizzato per la sicurezza. Una sola tessera, tutto connesso.
 
 ---
 
-## 1. Sistema di Accesso alle Cabine
+## Cosa fa, in concreto
 
-La card permette al passeggero di aprire la propria cabina.  
-Il sistema:
+### 🔑 Accesso alle Cabine
+La card apre la porta della cabina assegnata. Il sistema riconosce la tessera, verifica l'associazione e registra ogni tentativo — riuscito o negato. Niente chiavi fisiche, niente confusione: funziona esattamente come sulle navi reali.
 
-- riconosce la card  
-- verifica a quale cabina è associata  
-- registra ogni tentativo di accesso (riuscito o negato)
+### 💳 Pagamenti a Bordo
+La stessa card diventa un portafoglio digitale. Ristorante, negozi, bar: il passeggero avvicina la card e il saldo si aggiorna. Ogni transazione viene salvata, il saldo è sempre visibile e la ricarica è immediata.
 
-Questo simula il funzionamento delle porte elettroniche presenti sulle navi reali.
-
----
-
-## 2. Sistema Pagamenti a Bordo
-
-La card funziona come un **portafoglio digitale**.  
-Il passeggero può usarla per:
-
-- acquistare prodotti nei negozi  
-- pagare al ristorante  
-- ricaricare il proprio saldo  
-
-Il sistema mantiene lo storico delle spese e il saldo rimanente.
+### 📡 Sicurezza e Tracciamento RFID
+Sparsi per la nave ci sono dei reader che rilevano automaticamente il passaggio delle card. In questo modo è sempre possibile sapere chi è a bordo, chi è sceso a terra e chi non viene rilevato da troppo tempo. Un sistema semplice ma fondamentale in caso di emergenza.
 
 ---
 
-## 3. Sistema di Sicurezza con Reader RFID
+## Come è costruito
 
-Sulla nave sono presenti vari **reader** che rilevano automaticamente il passaggio delle card.  
-Questo permette di sapere:
-
-- chi è a bordo  
-- chi è sceso a terra  
-- chi non è stato rilevato di recente  
-
-È una simulazione dei sistemi reali usati per la sicurezza e per la gestione delle emergenze.
+| Componente | Ruolo nel progetto |
+|---|---|
+| **Python + Flask** | Backend web: gestisce le logiche, le pagine e i servizi |
+| **MySQL** | Database relazionale: salva passeggeri, accessi, transazioni e rilevazioni |
+| **HTML/CSS + Jinja2** | Dashboard web: mostra tutto in tempo reale |
+| **Moduli RFID RC522 / MFRC522** | Simulano i lettori di card fisici (cabine, casse, reader di bordo) |
 
 ---
 
-# Strumenti Utilizzati
+## Perché RC522?
 
-### **Python + Flask**
-Utilizzati per creare l’applicazione web che gestisce tutti i sistemi.  
-Flask permette di definire pagine, funzioni e servizi in modo semplice e veloce.
+I moduli **MFRC522** sono la scelta naturale per un progetto come questo:
+- Economici e facili da reperire
+- Compatibili con tag **MIFARE Classic 1K**
+- Comunicano via **SPI**, semplici da collegare a microcontrollori
+- Ampiamente documentati e usati in ambito didattico
 
-### **MySQL**
-MySQL è un sistema di gestione di database relazionali (RDBMS), uno dei più utilizzati al mondo.  
-Permette di salvare, organizzare e gestire dati in tabelle collegate tra loro tramite relazioni.
-
-### **HTML/CSS + Jinja2**
-Usati per costruire la **dashboard web**, che mostra:
-
-- lo stato dei passeggeri  
-- gli accessi alle cabine  
-- le transazioni  
-- le rilevazioni dei reader  
-
-Jinja2 permette di inserire dati dinamici nelle pagine HTML.
+La stessa card funziona per tutto: apre la cabina, paga al ristorante, viene rilevata dai reader. Proprio come accade sulle navi vere.
 
 ---
 
-# Organizzazione del Progetto
+## Struttura del Progetto
+```
+/
+├── sistema_cabine/       # Accessi, tentativi, log porte
+├── sistema_pagamenti/    # Saldo, transazioni, ricariche
+├── sistema_sicurezza/    # Reader RFID, posizione passeggeri
+└── dashboard/            # Interfaccia web di monitoraggio
+```
 
-Il progetto è diviso in tre parti principali:
-
-1. **Sistema Cabine** – Gestisce accessi e tentativi di apertura.  
-2. **Sistema Pagamenti** – Gestisce saldo, acquisti e storico transazioni.  
-3. **Sistema Sicurezza** – Gestisce reader RFID e posizione dei passeggeri.
-
-Tutti i sistemi condividono lo stesso database e sono controllati da una dashboard web che permette di monitorare la nave in tempo reale.
-
----
-
-# RC522 per la Simulazione delle Cabine
-
-Per simulare l’accesso alle cabine vengono utilizzati i **moduli RFID RC522**, dispositivi economici e molto diffusi nei progetti didattici.
-
-I motivi della scelta:
-
-- perfetti per simulare una porta elettronica  
-- facili da integrare con microcontrollori  
-- affidabili e ben documentati  
-- costo molto basso  
-
-Ogni cabina avrà un RC522 che legge la card del passeggero e invia l’ID al backend, che decide se l’accesso è consentito o negato.
-
-
+Tutti e tre i moduli condividono lo stesso database MySQL e sono monitorabili dalla dashboard in tempo reale.
 
 ---
 
-# RC522 anche per i Pagamenti
+## Requisiti
 
-Per mantenere il sistema coerente e a basso costo, gli stessi moduli **RC522** vengono utilizzati anche per simulare i pagamenti a bordo.
-
-In questo modo:
-
-- la stessa card funziona sia come chiave della cabina sia come portafoglio digitale  
-- un RC522 posizionato in un “punto cassa” legge l’ID della card  
-- il backend scala il saldo del passeggero  
-- ogni pagamento viene registrato nello storico transazioni  
-
-Questa scelta rende il sistema realistico, semplice da dimostrare e perfetto per un progetto scolastico a budget limitato.
+- Python 3.x
+- Flask
+- MySQL
+- Hardware: modulo MFRC522 + tag MIFARE Classic 1K
 
 ---
 
-## Sicurezza dei tag RFID e scelta del reader
-
-Il progetto utilizza il modulo **MFRC522**, un reader molto diffuso nei laboratori didattici grazie al costo ridotto e alla semplicità di integrazione con Arduino.
-
-### Perché MFRC522?
-- Supporta tag **MIFARE Classic 1K**
-- Funziona tramite **SPI**
-- È economico e facile da reperire
-- Perfetto per prototipi e progetti scolastici
-
-
-
+*Progetto scolastico — sviluppato per simulare i sistemi digitali reali presenti sulle navi da crociera moderne.*
