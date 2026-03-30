@@ -1,21 +1,20 @@
 # Sistema Digitale Integrato per Nave da Crociera
 
-Una card. Tre sistemi. Tutta la nave in tasca.
-
-Questo progetto simula il cuore digitale di una nave da crociera moderna: ogni passeggero riceve una **card con ID univoco** che gli permette di aprire la propria cabina, pagare a bordo e risultare sempre localizzato per la sicurezza. Una sola tessera, tutto connesso.
+Questo progetto simula il cuore digitale di una nave da crociera moderna: ogni passeggero riceve una **card con ID univoco** che gli permette di aprire la propria cabina, pagare a bordo e risultare sempre localizzato per la sicurezza.
 
 ---
 
-## Cosa fa, in concreto
+## Cosa fa, in concreto?
 
 ### Accesso alle Cabine
-La card apre la porta della cabina assegnata. Il sistema riconosce la tessera, verifica l'associazione e registra ogni tentativo — riuscito o negato. Niente chiavi fisiche, niente confusione: funziona esattamente come sulle navi reali.
+La card apre la porta della cabina assegnata. Il sistema riconosce la tessera, verifica l'associazione e registra ogni tentativo — riuscito o negato. 
+Esattamente come sulle navi reali.
 
 ### Pagamenti a Bordo
 La stessa card diventa un portafoglio digitale. Ristorante, negozi, bar: il passeggero avvicina la card e il saldo si aggiorna. Ogni transazione viene salvata, il saldo è sempre visibile e la ricarica è immediata.
 
 ### Sicurezza e Tracciamento RFID
-Sparsi per la nave ci sono dei reader che rilevano automaticamente il passaggio delle card. In questo modo è sempre possibile sapere chi è a bordo, chi è sceso a terra e chi non viene rilevato da troppo tempo — un sistema fondamentale in caso di emergenza.
+Sulla nave sono presenti vari reader che rilevano automaticamente il passaggio delle card. In questo modo è sempre possibile sapere chi è a bordo, chi è sceso a terra e chi non viene rilevato da troppo tempo — un sistema fondamentale in caso di emergenza.
 
 ---
 
