@@ -1,4 +1,4 @@
-# 🚢 Sistema Digitale Integrato per Nave da Crociera
+# Sistema Digitale Integrato per Nave da Crociera
 
 Una card. Tre sistemi. Tutta la nave in tasca.
 
@@ -8,14 +8,14 @@ Questo progetto simula il cuore digitale di una nave da crociera moderna: ogni p
 
 ## Cosa fa, in concreto
 
-### 🔑 Accesso alle Cabine
+### Accesso alle Cabine
 La card apre la porta della cabina assegnata. Il sistema riconosce la tessera, verifica l'associazione e registra ogni tentativo — riuscito o negato. Niente chiavi fisiche, niente confusione: funziona esattamente come sulle navi reali.
 
-### 💳 Pagamenti a Bordo
+### Pagamenti a Bordo
 La stessa card diventa un portafoglio digitale. Ristorante, negozi, bar: il passeggero avvicina la card e il saldo si aggiorna. Ogni transazione viene salvata, il saldo è sempre visibile e la ricarica è immediata.
 
-### 📡 Sicurezza e Tracciamento RFID
-Sparsi per la nave ci sono dei reader che rilevano automaticamente il passaggio delle card. In questo modo è sempre possibile sapere chi è a bordo, chi è sceso a terra e chi non viene rilevato da troppo tempo. Un sistema semplice ma fondamentale in caso di emergenza.
+### Sicurezza e Tracciamento RFID
+Sparsi per la nave ci sono dei reader che rilevano automaticamente il passaggio delle card. In questo modo è sempre possibile sapere chi è a bordo, chi è sceso a terra e chi non viene rilevato da troppo tempo — un sistema fondamentale in caso di emergenza.
 
 ---
 
@@ -36,7 +36,7 @@ I moduli **MFRC522** sono la scelta naturale per un progetto come questo:
 - Economici e facili da reperire
 - Compatibili con tag **MIFARE Classic 1K**
 - Comunicano via **SPI**, semplici da collegare a microcontrollori
-- Ampiamente documentati e usati in ambito didattico
+- Ampiamente documentati e utilizzati in ambito didattico
 
 La stessa card funziona per tutto: apre la cabina, paga al ristorante, viene rilevata dai reader. Proprio come accade sulle navi vere.
 
