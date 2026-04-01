@@ -21,22 +21,22 @@ CREATE TABLE IF NOT EXISTS eventi_accesso (
 );
 
 CREATE TABLE IF NOT EXISTS posizioni (
-  uid         VARCHAR(20) PRIMARY KEY,
-  ultima_zona VARCHAR(100),
-  aggiornato  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  uid                  VARCHAR(20) PRIMARY KEY,
+  ultima_zona          VARCHAR(100),
+  ultimo_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (uid) REFERENCES passeggeri(uid)
 );
 
 CREATE TABLE IF NOT EXISTS transazioni (
-  id        INT AUTO_INCREMENT PRIMARY KEY,
-  uid       VARCHAR(20) NOT NULL,
-  importo   DECIMAL(8,2) NOT NULL,
-  servizio  VARCHAR(100),
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  uid         VARCHAR(20) NOT NULL,
+  importo     DECIMAL(8,2) NOT NULL,
+  descrizione VARCHAR(100),
+  timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE VIEW IF NOT EXISTS dispersi AS
-  SELECT p.nome, p.cabina, pos.ultima_zona, pos.aggiornato
+CREATE OR REPLACE VIEW dispersi AS
+  SELECT p.nome, p.cabina, pos.ultima_zona, pos.ultimo_aggiornamento
   FROM passeggeri p
   LEFT JOIN posizioni pos ON p.uid = pos.uid
   WHERE pos.ultima_zona NOT LIKE '%Muster%'

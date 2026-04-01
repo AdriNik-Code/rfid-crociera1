@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Simulatore — RFID Crociera{% endblock %}
+
+{% block extra_style %}
+<style>
+    .sim-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        color: #7a9cc0;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+    .form-group select { width: 100%; }
+
+    /* Risultato lettura */
+    #risultato {
+        display: none;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-top: 20px;
+        border: 2px solid;
+        transition: all 0.3s;
+    }
+    #risultato.ok  { background: rgba(102,187,106,0.1); border-color: #66bb6a; }
+    #risultato.ko  { background: rgba(239,83,80,0.1);   border-color: #ef5350; }
+    #risultato h3  { font-size: 1.2rem; margin-bottom: 10px; }
+    #risultato.ok h3 { color: #66bb6a; }
+    #risultato.ko h3 { color: #ef5350; }
+    .ris-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+        gap: 14px;
+        margin-top: 14px;
+    }
+    .ris-item .ris-label { font-size: 0.78rem; color: #7a9cc0; margin-bottom: 3px; }
+    .ris-item .ris-val   { font-size: 0.95rem; font-weight: 600; }
+
+    /* Log letture */
+    #log { max-height: 320px; overflow-y: auto; }
+    .log-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #0f2a4a;
+        font-size: 0.88rem;
+        animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)} }
+    .log-row:last-child { border-bottom: none; }
+    .log-time { color: #7a9cc0; min-width: 80px; }
+    .log-nome { font-weight: 600; min-width: 130px; }
+    .log-zona { color: #b0c4de; flex: 1; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="icon">📡</span>
+    <h1>Simulatore Lettura Tag</h1>
+</div>
+
+{% if error %}
+<div class="alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+
+    <!-- Form simulazione -->
+    <div class="card">
+        <div class="card-title">🔖 Simula lettura RFID</div>
+        <p style="color:#7a9cc0; font-size:0.88rem; margin-bottom:18px">
+            Seleziona un passeggero e un reader per simulare l'avvicinamento del tag.
+        </p>
+
+        <div class="sim-form">
+            <div class="form-group">
+                <label>Passeggero (tag RFID)</label>
+                <select id="sel-uid">
+                    <option value="">— Seleziona —</option>
+                    {% for p in passeggeri %}
+                    <option value="{{ p.uid }}">{{ p.nome }} ({{ p.uid }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Reader / Postazione</label>
+                <select id="sel-reader">
+                    <option value="">— Seleziona —</option>
+                    {% for r in readers %}
+                    <option value="{{ r.id }}">{{ r.id }} — {{ r.zona }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="simulaLettura()" id="btn-simula" style="width:100%">
+            📡 Simula lettura tag
+        </button>
+
+        <!-- Risultato -->
+        <div id="risultato">
+            <h3 id="ris-titolo"></h3>
+            <div class="ris-grid">
+                <div class="ris-item">
+                    <div class="ris-label">Passeggero</div>
+                    <div class="ris-val" id="ris-nome">—</div>
+                </div>
+                <div class="ris-item">
+                    <div class="ris-label">Zona</div>
+                    <div class="ris-val" id="ris-zona">—</div>
+                </div>
+                <div class="ris-item">
+                    <div class="ris-label">Saldo residuo</div>
+                    <div class="ris-val" id="ris-saldo">—</div>
+                </div>
+                <div class="ris-item" id="ris-importo-wrap" style="display:none">
+                    <div class="ris-label">Importo scalato</div>
+                    <div class="ris-val" id="ris-importo" style="color:#ffa726">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log letture -->
+    <div class="card">
+        <div class="card-title">📋 Log simulazioni <span id="log-count" style="color:#7a9cc0; font-weight:400">(0)</span></div>
+        <div id="log">
+            <div style="color:#7a9cc0; text-align:center; padding:30px; font-size:0.9rem">
+                Nessuna lettura simulata ancora...
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+let logCount = 0;
+
+async function simulaLettura() {
+    const uid      = document.getElementById('sel-uid').value;
+    const readerId = document.getElementById('sel-reader').value;
+
+    if (!uid || !readerId) {
+        alert('Seleziona un passeggero e un reader!');
+        return;
+    }
+
+    const btn = document.getElementById('btn-simula');
+    btn.textContent = '⏳ Lettura in corso...';
+    btn.disabled = true;
+
+    try {
+        const form = new FormData();
+        form.append('uid', uid);
+        form.append('reader_id', readerId);
+
+        const res  = await fetch('/simulatore/leggi', { method: 'POST', body: form });
+        const data = await res.json();
+
+        mostraRisultato(data);
+        aggiungiLog(data);
+    } catch (err) {
+        alert('Errore di comunicazione con il server: ' + err.message);
+    } finally {
+        btn.textContent = '📡 Simula lettura tag';
+        btn.disabled = false;
+    }
+}
+
+function mostraRisultato(d) {
+    const box = document.getElementById('risultato');
+    box.style.display = 'block';
+    box.className = d.esito === 'OK' ? 'ok' : 'ko';
+
+    document.getElementById('ris-titolo').textContent =
+        d.esito === 'OK' ? '✅ Accesso consentito' : '🚫 Accesso negato';
+    document.getElementById('ris-nome').textContent  = d.nome;
+    document.getElementById('ris-zona').textContent  = d.zona;
+    document.getElementById('ris-saldo').textContent = `€ ${parseFloat(d.saldo).toFixed(2)}`;
+
+    const importoWrap = document.getElementById('ris-importo-wrap');
+    if (d.importo_scalato) {
+        importoWrap.style.display = '';
+        document.getElementById('ris-importo').textContent = `- € ${parseFloat(d.importo_scalato).toFixed(2)}`;
+    } else {
+        importoWrap.style.display = 'none';
+    }
+}
+
+function aggiungiLog(d) {
+    logCount++;
+    document.getElementById('log-count').textContent = `(${logCount})`;
+
+    const log = document.getElementById('log');
+    // Rimuove il placeholder se presente
+    if (logCount === 1) log.innerHTML = '';
+
+    const row = document.createElement('div');
+    row.className = 'log-row';
+    row.innerHTML = `
+        <span class="log-time">${d.timestamp.split(' ')[1]}</span>
+        <span class="badge ${d.esito === 'OK' ? 'badge-ok' : 'badge-ko'}">${d.esito}</span>
+        <span class="log-nome">${d.nome}</span>
+        <span class="log-zona">${d.zona}</span>
+    `;
+    log.insertBefore(row, log.firstChild);
+}
+</script>
+{% endblock %}

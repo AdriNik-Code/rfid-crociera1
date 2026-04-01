@@ -9,11 +9,3 @@ INSERT INTO posizioni (uid, ultima_zona) VALUES
   ('11223344', 'Ristorante-Principale'),
   ('AABBCCDD', 'Piscina-Lido'),
   ('FFEE1122', 'Plancia');
-```
-
-**Infine dentro `app/`** crea `requirements.txt`:
-```
-Flask==3.0.0
-mysql-connector-python==8.2.0
-python-dotenv==1.0.0
-pyserial==3.5

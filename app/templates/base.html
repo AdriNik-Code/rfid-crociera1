@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RFID Crociera{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0a1628;
+            color: #e0e6f0;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR */
+        nav {
+            background: linear-gradient(90deg, #0d2144, #1a3a6e);
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #4fc3f7;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-brand span { font-size: 1.5rem; }
+        .nav-links { display: flex; gap: 5px; }
+        .nav-links a {
+            color: #b0c4de;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(79, 195, 247, 0.15);
+            color: #4fc3f7;
+        }
+
+        /* LAYOUT */
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+        /* CARDS */
+        .card {
+            background: #0d2144;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #4fc3f7;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* STAT CARDS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #0d2144;
+            border: 1px solid #1e3a5f;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4fc3f7;
+            line-height: 1;
+        }
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #7a9cc0;
+            margin-top: 6px;
+        }
+        .stat-card.danger .number { color: #ef5350; }
+        .stat-card.success .number { color: #66bb6a; }
+        .stat-card.warning .number { color: #ffa726; }
+
+        /* TABELLA */
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #7a9cc0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #1e3a5f;
+        }
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #0f2a4a;
+            font-size: 0.9rem;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(79, 195, 247, 0.04); }
+
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-ok  { background: rgba(102,187,106,0.15); color: #66bb6a; }
+        .badge-ko  { background: rgba(239,83,80,0.15);   color: #ef5350; }
+        .badge-info { background: rgba(79,195,247,0.15); color: #4fc3f7; }
+
+        /* ALERT ERRORE */
+        .alert-error {
+            background: rgba(239,83,80,0.1);
+            border: 1px solid #ef5350;
+            color: #ef5350;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* PULSANTI */
+        .btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-primary { background: #1565c0; color: #fff; }
+        .btn-primary:hover { background: #1976d2; }
+        .btn-danger  { background: #c62828; color: #fff; }
+        .btn-danger:hover  { background: #d32f2f; }
+        .btn-success { background: #2e7d32; color: #fff; }
+        .btn-success:hover { background: #388e3c; }
+
+        /* SELECT / INPUT */
+        select, input[type="text"] {
+            background: #0a1628;
+            border: 1px solid #1e3a5f;
+            color: #e0e6f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #4fc3f7;
+        }
+
+        /* HEADING PAGINA */
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+        .page-header h1 { font-size: 1.6rem; color: #e0e6f0; }
+        .page-header .icon { font-size: 2rem; }
+    </style>
+    {% block extra_style %}{% endblock %}
+</head>
+<body>
+    <nav>
+        <a class="nav-brand" href="/dashboard">
+            <span>🚢</span> RFID Crociera
+        </a>
+        <div class="nav-links">
+            <a href="/dashboard"   {% if request.path == '/dashboard'   %}class="active"{% endif %}>📊 Dashboard</a>
+            <a href="/passeggeri"  {% if request.path == '/passeggeri'  %}class="active"{% endif %}>👥 Passeggeri</a>
+            <a href="/simulatore"  {% if request.path == '/simulatore'  %}class="active"{% endif %}>📡 Simulatore</a>
+            <a href="/emergenza"   {% if request.path == '/emergenza'   %}class="active"{% endif %}>🚨 Emergenza</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}{{ passeggero.nome if passeggero else 'Dettaglio' }} — RFID Crociera{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="icon">👤</span>
+    <h1>{{ passeggero.nome if passeggero else 'Passeggero non trovato' }}</h1>
+</div>
+
+{% if error %}
+<div class="alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+{% if passeggero %}
+<!-- Info passeggero -->
+<div class="card">
+    <div class="card-title">📋 Dati passeggero</div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:20px;">
+        <div>
+            <div style="color:#7a9cc0; font-size:0.8rem; margin-bottom:4px">UID Tag</div>
+            <code style="font-size:1.1rem; color:#4fc3f7">{{ passeggero.uid }}</code>
+        </div>
+        <div>
+            <div style="color:#7a9cc0; font-size:0.8rem; margin-bottom:4px">Cabina</div>
+            <div style="font-size:1.1rem">{{ passeggero.cabina }}</div>
+        </div>
+        <div>
+            <div style="color:#7a9cc0; font-size:0.8rem; margin-bottom:4px">Saldo cabina</div>
+            <div style="font-size:1.3rem; font-weight:700; color:{{ '#66bb6a' if passeggero.saldo > 20 else '#ffa726' }}">
+                € {{ "%.2f"|format(passeggero.saldo) }}
+            </div>
+        </div>
+        <div>
+            <div style="color:#7a9cc0; font-size:0.8rem; margin-bottom:4px">Autorizzazioni</div>
+            <div>
+                {% for area in passeggero.autorizzazioni.split(',') %}
+                    <span class="badge badge-info" style="margin:2px">{{ area.strip() }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% if passeggero.allergie %}
+        <div>
+            <div style="color:#7a9cc0; font-size:0.8rem; margin-bottom:4px">⚠️ Allergie</div>
+            <div style="color:#ffa726">{{ passeggero.allergie }}</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Storico eventi -->
+<div class="card">
+    <div class="card-title">📡 Storico accessi (ultimi 50)</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Reader</th>
+                <th>Zona</th>
+                <th>Esito</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in eventi %}
+            <tr>
+                <td>{{ e.reader_id }}</td>
+                <td>{{ e.zona }}</td>
+                <td>
+                    <span class="badge {{ 'badge-ok' if e.esito == 'OK' else 'badge-ko' }}">
+                        {{ e.esito }}
+                    </span>
+                </td>
+                <td style="color:#7a9cc0">{{ e.timestamp }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="text-align:center; color:#7a9cc0; padding:20px">Nessun evento</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Transazioni -->
+{% if transazioni %}
+<div class="card">
+    <div class="card-title">💳 Transazioni</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Descrizione</th>
+                <th>Importo</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transazioni %}
+            <tr>
+                <td>{{ t.descrizione }}</td>
+                <td style="color:#ef5350; font-weight:600">- € {{ "%.2f"|format(t.importo) }}</td>
+                <td style="color:#7a9cc0">{{ t.timestamp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endif %}
+
+<a href="/passeggeri" class="btn btn-primary">← Torna alla lista</a>
+{% endblock %}

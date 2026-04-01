@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RFID Crociera{% endblock %}
+
+{% block extra_style %}
+<style>
+    .esito-ok  { color: #66bb6a; font-weight: 600; }
+    .esito-ko  { color: #ef5350; font-weight: 600; }
+    #live-dot {
+        width: 10px; height: 10px;
+        background: #66bb6a;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.3; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="icon">📊</span>
+    <h1>Dashboard</h1>
+    <span id="live-dot" title="Aggiornamento automatico attivo"></span>
+</div>
+
+{% if error %}
+<div class="alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+<!-- Statistiche -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="number" id="stat-passeggeri">{{ passeggeri_totali }}</div>
+        <div class="label">👥 Passeggeri a bordo</div>
+    </div>
+    <div class="stat-card success">
+        <div class="number" id="stat-accessi">{{ accessi_oggi }}</div>
+        <div class="label">✅ Accessi oggi</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="number" id="stat-dispersi">{{ dispersi }}</div>
+        <div class="label">🚨 Dispersi</div>
+    </div>
+    <div class="stat-card warning">
+        <div class="number" id="stat-negati">—</div>
+        <div class="label">🚫 Accessi negati oggi</div>
+    </div>
+</div>
+
+<!-- Tabella eventi -->
+<div class="card">
+    <div class="card-title">📋 Ultimi eventi RFID</div>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Passeggero</th>
+                <th>UID</th>
+                <th>Reader</th>
+                <th>Zona</th>
+                <th>Esito</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="tabella-eventi">
+            {% for e in eventi %}
+            <tr>
+                <td>{{ e.id }}</td>
+                <td>{{ e.nome or '—' }}</td>
+                <td><code>{{ e.uid }}</code></td>
+                <td>{{ e.reader_id }}</td>
+                <td>{{ e.zona }}</td>
+                <td class="esito-{{ e.esito | lower }}">{{ e.esito }}</td>
+                <td>{{ e.timestamp }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" style="text-align:center; color:#7a9cc0; padding:30px">Nessun evento registrato</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+// Aggiorna la tabella e le statistiche ogni 5 secondi
+async function aggiorna() {
+    try {
+        const [eventiRes, statRes] = await Promise.all([
+            fetch('/api/ultimi-eventi'),
+            fetch('/api/statistiche')
+        ]);
+        const eventi = await eventiRes.json();
+        const stat   = await statRes.json();
+
+        // Aggiorna statistiche
+        document.getElementById('stat-passeggeri').textContent = stat.passeggeri_totali ?? '—';
+        document.getElementById('stat-accessi').textContent    = stat.accessi_oggi ?? '—';
+        document.getElementById('stat-dispersi').textContent   = stat.dispersi ?? '—';
+        document.getElementById('stat-negati').textContent     = stat.accessi_negati ?? '—';
+
+        // Aggiorna tabella
+        const tbody = document.getElementById('tabella-eventi');
+        if (eventi.length === 0) return;
+        tbody.innerHTML = eventi.map(e => `
+            <tr>
+                <td>${e.id}</td>
+                <td>${e.nome || '—'}</td>
+                <td><code>${e.uid}</code></td>
+                <td>${e.reader_id}</td>
+                <td>${e.zona}</td>
+                <td class="esito-${e.esito.toLowerCase()}">${e.esito}</td>
+                <td>${e.timestamp}</td>
+            </tr>
+        `).join('');
+    } catch(err) {
+        console.warn('Errore aggiornamento:', err);
+    }
+}
+
+setInterval(aggiorna, 5000);
+</script>
+{% endblock %}

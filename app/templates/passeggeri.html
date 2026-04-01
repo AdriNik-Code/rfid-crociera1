@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Passeggeri — RFID Crociera{% endblock %}
+
+{% block extra_style %}
+<style>
+    .search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+    .search-bar input { flex: 1; }
+    .link-uid { color: #4fc3f7; text-decoration: none; font-weight: 600; }
+    .link-uid:hover { text-decoration: underline; }
+    .saldo { font-weight: 600; }
+    .saldo-ok  { color: #66bb6a; }
+    .saldo-low { color: #ffa726; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="icon">👥</span>
+    <h1>Passeggeri a bordo</h1>
+</div>
+
+{% if error %}
+<div class="alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+<div class="card">
+    <div class="search-bar">
+        <input type="text" id="ricerca" placeholder="🔍 Cerca per nome, UID o cabina..." oninput="filtra()">
+        <span style="color:#7a9cc0; align-self:center; font-size:0.9rem">
+            {{ passeggeri | length }} passeggeri
+        </span>
+    </div>
+
+    <table id="tabella">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Nome</th>
+                <th>Cabina</th>
+                <th>Saldo</th>
+                <th>Ultima zona</th>
+                <th>Ultimo aggiornamento</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in passeggeri %}
+            <tr>
+                <td><code>{{ p.uid }}</code></td>
+                <td>{{ p.nome }}</td>
+                <td>{{ p.cabina }}</td>
+                <td class="saldo {{ 'saldo-ok' if p.saldo > 20 else 'saldo-low' }}">
+                    € {{ "%.2f"|format(p.saldo) }}
+                </td>
+                <td>{{ p.ultima_zona or '—' }}</td>
+                <td style="color:#7a9cc0; font-size:0.85rem">{{ p.ultimo_aggiornamento or '—' }}</td>
+                <td>
+                    <a class="btn btn-primary" href="/passeggeri/{{ p.uid }}" style="padding:6px 14px; font-size:0.8rem">
+                        Dettaglio →
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" style="text-align:center; color:#7a9cc0; padding:30px">Nessun passeggero trovato</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+function filtra() {
+    const q = document.getElementById('ricerca').value.toLowerCase();
+    document.querySelectorAll('#tabella tbody tr').forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}

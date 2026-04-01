@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Emergenza — RFID Crociera{% endblock %}
+
+{% block extra_style %}
+<style>
+    .emergency-banner {
+        background: linear-gradient(135deg, rgba(198,40,40,0.3), rgba(183,28,28,0.15));
+        border: 2px solid #ef5350;
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .emergency-banner .icon { font-size: 2.5rem; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .emergency-banner h2 { color: #ef5350; font-size: 1.4rem; }
+    .emergency-banner p  { color: #b0c4de; margin-top: 4px; font-size: 0.9rem; }
+
+    .progress-bar-wrap {
+        background: #0a1628;
+        border-radius: 8px;
+        height: 12px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+    .progress-bar {
+        height: 100%;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #66bb6a, #43a047);
+        transition: width 0.5s ease;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <span class="icon">🚨</span>
+    <h1>Simulazione Emergenza</h1>
+</div>
+
+{% if error %}
+<div class="alert-error">⚠️ {{ error }}</div>
+{% endif %}
+
+<!-- Banner emergenza -->
+<div class="emergency-banner">
+    <span class="icon">🚨</span>
+    <div>
+        <h2>MUSTER DRILL — VERIFICA PASSEGGERI</h2>
+        <p>Stai visualizzando i passeggeri che NON risultano ancora alle stazioni di raccolta (Muster Station)</p>
+    </div>
+</div>
+
+<!-- Statistiche -->
+<div class="stats-grid">
+    <div class="stat-card success">
+        <div class="number">{{ al_sicuro }}</div>
+        <div class="label">✅ Alle stazioni di raccolta</div>
+    </div>
+    <div class="stat-card danger">
+        <div class="number">{{ dispersi | length }}</div>
+        <div class="label">🚨 Dispersi / non rilevati</div>
+    </div>
+    <div class="stat-card">
+        <div class="number">{{ totale_passeggeri }}</div>
+        <div class="label">👥 Totale passeggeri</div>
+    </div>
+</div>
+
+<!-- Barra di avanzamento -->
+<div class="card">
+    <div class="card-title">📊 Avanzamento muster drill</div>
+    {% set perc = ((al_sicuro / totale_passeggeri) * 100) | int if totale_passeggeri > 0 else 0 %}
+    <div style="display:flex; justify-content:space-between; margin-bottom:6px">
+        <span style="color:#7a9cc0; font-size:0.9rem">Passeggeri raggiunti</span>
+        <span style="font-weight:600; color:#66bb6a">{{ perc }}%</span>
+    </div>
+    <div class="progress-bar-wrap">
+        <div class="progress-bar" style="width:{{ perc }}%"></div>
+    </div>
+    <div style="font-size:0.85rem; color:#7a9cc0; margin-top:8px">
+        {{ al_sicuro }} / {{ totale_passeggeri }} passeggeri alle stazioni di raccolta
+    </div>
+</div>
+
+<!-- Lista dispersi -->
+<div class="card">
+    <div class="card-title" style="color:#ef5350">🚨 Passeggeri dispersi ({{ dispersi | length }})</div>
+
+    {% if dispersi | length == 0 %}
+    <div style="text-align:center; padding:40px; color:#66bb6a; font-size:1.1rem">
+        ✅ Tutti i passeggeri sono alle stazioni di raccolta!
+    </div>
+    {% else %}
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cabina</th>
+                <th>Ultima zona rilevata</th>
+                <th>Ultimo aggiornamento</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in dispersi %}
+            <tr>
+                <td style="font-weight:600; color:#ef5350">{{ d.nome }}</td>
+                <td>{{ d.cabina }}</td>
+                <td>{{ d.ultima_zona or '<span style="color:#7a9cc0">Non rilevato</span>' }}</td>
+                <td style="color:#7a9cc0; font-size:0.85rem">{{ d.ultimo_aggiornamento or '—' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+
+<div style="display:flex; gap:12px">
+    <a href="/simulatore" class="btn btn-primary">📡 Vai al simulatore</a>
+    <button class="btn btn-danger" onclick="location.reload()">🔄 Aggiorna ora</button>
+</div>
+{% endblock %}
